@@ -1,64 +1,48 @@
 package br.com.iago.restap.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-import br.com.iago.restap.excptions.UnsuportedMathOperationException;
-import br.com.iago.restap.math.SimpleMath;
-import br.com.iago.restap.resquestconverter.NumberConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import br.com.iago.restap.model.Person;
+import br.com.iago.restap.servises.PsersonServices;
 
 @RestController
+@RequestMapping("/person")
 public class MathController {
-private SimpleMath math = new SimpleMath();
-	
-	@GetMapping("/sum/{numberOne}/{numberTwo}")
-	public Double sum(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
-		if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
-			throw new UnsuportedMathOperationException("Please set a numeric value!");
-		}
-		return math.sum(NumberConverter.covertToDouble(numberOne), NumberConverter.covertToDouble(numberTwo));		
-	}	
-	
-	
-	@GetMapping("/subtraction/{numberOne}/{numberTwo}")
-	public Double subtraction(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
-		if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
-			throw new UnsuportedMathOperationException("Please set a numeric value!");
-		}
-		return math.subtraction(NumberConverter.covertToDouble(numberOne), NumberConverter.covertToDouble(numberTwo));	
-	}	
-	
-	@GetMapping("/multiplication/{numberOne}/{numberTwo}")
-	public Double multiplication(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
-		if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
-			throw new UnsuportedMathOperationException("Please set a numeric value!");
-		}
-		return math.multiplication(NumberConverter.covertToDouble(numberOne), NumberConverter.covertToDouble(numberTwo));	
-	}	
-	
-	@GetMapping("/division/{numberOne}/{numberTwo}")
-	public Double division(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
-		if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
-			throw new UnsuportedMathOperationException("Please set a numeric value!");
-		}
-		return math.division(NumberConverter.covertToDouble(numberOne), NumberConverter.covertToDouble(numberTwo));	
+
+	@Autowired
+	private PsersonServices services;
+
+	@GetMapping(value = "/{id}", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+	public Person person(@PathVariable(value = "id") Long id) throws Exception {
+		return services.findById(id);
 	}
 
+	@GetMapping(produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+	public List<Person> allperson() {
+		return services.findAll();
+	}
+
+	@PostMapping(produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Person create(@RequestBody Person person) {
+		return services.create(person);
+	}
 	
-	@GetMapping("/mean/{numberOne}/{numberTwo}")
-	public Double mean(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
-		if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
-			throw new UnsuportedMathOperationException("Please set a numeric value!");
-		}
-		return math.mean(NumberConverter.covertToDouble(numberOne), NumberConverter.covertToDouble(numberTwo));		
-	}	
+	@PutMapping(
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Person update(@RequestBody Person person) {
+		return services.update(person);
+	}
 	
-	@GetMapping("/squareRoot/{number}")
-	public Double squareRoot(@PathVariable("number") String number) throws Exception {
-		if (!NumberConverter.isNumeric(number)) {
-			throw new UnsuportedMathOperationException("Please set a numeric value!");
-		}
-		return math.squareRoot(NumberConverter.covertToDouble(number));		
-	}	
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+		services.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+
 }

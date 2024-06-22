@@ -1,1 +1,13 @@
-spring.application.name=rest-with-spring-2
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/udemyCurse
+    username: postgres
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+   # properties:
+    #  hibernate:
+     #   dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
