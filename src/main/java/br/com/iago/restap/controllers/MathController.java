@@ -25,29 +25,31 @@ public class MathController {
 	@Autowired
 	private PsersonServices services;
 
-	@GetMapping(value = "/{id}", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/x-yaml"})
 	public PersonVo person(@PathVariable(value = "id") Long id) throws Exception {
 		return services.findById(id);
 	}
 
-	@GetMapping(produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/x-yaml"})
 	public List<PersonVo> allperson() {
 		return services.findAll();
 	}
 
-	@PostMapping(produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public PersonVo create(@RequestBody PersonVo person) {
+	@PostMapping(
+			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/x-yaml"}, 
+			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/x-yaml"})
+	public PersonVo create(@RequestBody PersonVo person) throws Exception {
 		return services.create(person);
 	}
 	
-//	@PostMapping(value = "/v2", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	@PostMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, consumes = MediaType.APPLICATION_JSON_VALUE)
 //	public PersonVoV2 createV2(@RequestBody PersonVoV2 person) {
 //		return services.createV2(person);
 //	}
 	
 	@PutMapping(
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/x-yaml"},
+			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/x-yaml"})
 	public PersonVo update(@RequestBody PersonVo person) {
 		return services.update(person);
 	}

@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import br.com.iago.restap.controllers.MathController;
 import br.com.iago.restap.dataVo.PersonVo;
 import br.com.iago.restap.dataVo.PersonVoV2;
 import br.com.iago.restap.excptions.ResouceNotFoundException;
@@ -25,23 +28,35 @@ public class PsersonServices {
 
 	private Logger logger = Logger.getLogger(PsersonServices.class.getName());
 
-	public List<PersonVo> findAll() {
+	public List<PersonVo> findAll()  {
 		logger.info("Finding all people!");
-		return DozzerMapper.parseListObjects(repostiroty.findAll(), PersonVo.class);
+		var persons = DozzerMapper.parseListObjects(repostiroty.findAll(), PersonVo.class);
+		persons.stream().forEach(p -> {
+			try {
+				p.add(linkTo(methodOn(MathController.class).person(p.getId())).withSelfRel());
+			} catch (Exception e) {
+	
+				e.printStackTrace();
+			}
+		});
+		return persons;
 
 	}
 
-	public PersonVo findById(Long id) {
+	public PersonVo findById(Long id) throws Exception {
 		logger.info("find one person!");
 		var entity = repostiroty.findById(id).orElseThrow(
 				() -> new ResouceNotFoundException("no records found for this Id"));
-		return DozzerMapper.parseObject(entity, PersonVo.class);
+		PersonVo vo = DozzerMapper.parseObject(entity, PersonVo.class);
+		vo.add(linkTo(methodOn(MathController.class).person(id)).withSelfRel());
+		return vo;
 	}
 
-	public PersonVo create(PersonVo person) {
+	public PersonVo create(PersonVo person) throws Exception {
 		logger.info("Creating one person!");
 		var entity = DozzerMapper.parseObject(person, Person.class);
 		var vo =  DozzerMapper.parseObject(repostiroty.save(entity), PersonVo.class);
+		vo.add(linkTo(methodOn(MathController.class).person(vo.getId())).withSelfRel());
 		return vo;
 	}
 
