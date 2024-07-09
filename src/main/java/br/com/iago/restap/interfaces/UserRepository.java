@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 import br.com.iago.restap.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-	@Query("SELECT u from user username")
+	@Query("SELECT u FROM User WHERE u.username =:userName")
 	User findByUsername(@Param("userName") String userName);
 }

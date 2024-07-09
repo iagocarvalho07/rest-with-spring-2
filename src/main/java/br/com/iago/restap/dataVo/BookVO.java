@@ -114,3 +114,4 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
 			return false;
 		return true;
 	}
+}
