@@ -6,14 +6,19 @@ import java.util.Objects;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "books")
 public class books {
 	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	private long id;
 	private String author;
+	@Temporal(TemporalType.DATE)
 	private Date launch_date;
 	private Double price;
 	private String title;
