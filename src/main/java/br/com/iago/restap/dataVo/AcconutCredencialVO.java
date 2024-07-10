@@ -9,8 +9,6 @@ public class AcconutCredencialVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
 	private String username;
 	private String password;
 	public AcconutCredencialVO(String username, String password) {
@@ -44,9 +42,4 @@ public class AcconutCredencialVO implements Serializable{
 		AcconutCredencialVO other = (AcconutCredencialVO) obj;
 		return Objects.equals(password, other.password) && Objects.equals(username, other.username);
 	}
-	
-	
-	
-	
-
 }
